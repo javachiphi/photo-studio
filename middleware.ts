@@ -5,7 +5,7 @@ export default authMiddleware({
   //   console.log('auth:middleware', auth.userId);
   //   console.log('req', req);
   // },
-  publicRoutes: ['/'],
+  publicRoutes: ['/', '/api/webhooks/clerk'],
 });
 
 export const config = {
