@@ -1,9 +1,16 @@
 'use client';
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { CldImage } from 'next-cloudinary';
-import { dataUrl, debounce, getImageSize } from '@/lib/utils';
+import { CldImage, getCldImageUrl } from 'next-cloudinary';
+import {
+  dataUrl,
+  debounce,
+  getImageSize,
+  download,
+  AspectRatioKey,
+} from '@/lib/utils';
 import { PlaceholderValue } from 'next/dist/shared/lib/get-img-props';
+import { aspectRatioOptions } from '@/constants';
 
 const TransformedImage = ({
   image,
@@ -14,7 +21,29 @@ const TransformedImage = ({
   setIsTransforming,
   hasDownload = false,
 }: TransformedImageProps) => {
-  const downloadHandler = () => {};
+  const downloadHandler = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    // TODO: figure out how to get the aspect ratio from the transformed image
+    const imageSize = aspectRatioOptions[image.aspectRatio as AspectRatioKey];
+
+    e.preventDefault();
+    const url = getCldImageUrl({
+      width: imageSize.width, // image?.width,
+      height: imageSize.height,
+      src: image?.publicId,
+      ...transformationConfig,
+    });
+
+    // no WH:              res.cloudinary.com/drqzbwrjf/image/upload/f_auto/q_auto/v1/photo-studio/qgrm6v1g7e4hhhkvuvm8?_a=BAVCcWBy0
+    // aspect ratio size : res.cloudinary.com/drqzbwrjf/image/upload/b_gen_fill,ar_1000:1334,c_pad/c_limit,w_1000/f_auto/q_auto/v1/photo-studio/cbljvrchbeodp83t1iw5?_a=BAVCcWBy0
+    //original size:       res.cloudinary.com/drqzbwrjf/image/upload/b_gen_fill,ar_1200:1600,c_pad/c_limit,w_1200/f_auto/q_auto/v1/photo-studio/qgrm6v1g7e4hhhkvuvm8?_a=BAVCcWBy0
+    //transformed          res.cloudinary.com/drqzbwrjf/image/upload/b_gen_fill,ar_2885:1920,c_pad/c_limit,w_2885/f_auto/q_auto/v1/photo-studio/qgrm6v1g7e4hhhkvuvm8?_a=BAVCcWBy0
+    // ar_2885:1920  w_2885
+    console.log('url', url);
+
+    // download(url, title);
+  };
   const [isImageReady, setIsImageReady] = useState(false);
 
   return (
