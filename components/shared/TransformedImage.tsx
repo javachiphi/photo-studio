@@ -40,9 +40,8 @@ const TransformedImage = ({
     //original size:       res.cloudinary.com/drqzbwrjf/image/upload/b_gen_fill,ar_1200:1600,c_pad/c_limit,w_1200/f_auto/q_auto/v1/photo-studio/qgrm6v1g7e4hhhkvuvm8?_a=BAVCcWBy0
     //transformed          res.cloudinary.com/drqzbwrjf/image/upload/b_gen_fill,ar_2885:1920,c_pad/c_limit,w_2885/f_auto/q_auto/v1/photo-studio/qgrm6v1g7e4hhhkvuvm8?_a=BAVCcWBy0
     // ar_2885:1920  w_2885
-    console.log('url', url);
 
-    // download(url, title);
+    download(url, title);
   };
   const [isImageReady, setIsImageReady] = useState(false);
 
