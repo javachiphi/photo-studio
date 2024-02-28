@@ -32,7 +32,6 @@ import router from 'next/router';
 
 export const formSchema = z.object({
   title: z.string(),
-  username: z.string().min(2).max(50),
   aspectRatio: z.string().optional(),
   color: z.string().optional(),
   prompt: z.string().optional(),
@@ -201,66 +200,44 @@ const TransformationForm = ({
           className="w-full"
           render={({ field }) => <Input {...field} className="input-field" />}
         />
-      </form>
-      {type === 'fill' && (
-        <CustomField
-          control={form.control}
-          name="aspectRatio"
-          formLabel="Aspect Ratio"
-          className="w-full"
-          render={({ field }) => (
-            <Select
-              onValueChange={(value) =>
-                onSelectFieldHandler(value, field.onChange)
-              }
-            >
-              <SelectTrigger className="select-field">
-                <SelectValue placeholder="Select size" />
-              </SelectTrigger>
-              <SelectContent>
-                {
-                  Object.keys(aspectRatioOptions).map((key) => (
-                    <SelectItem key={key} value={key}>
-                      {aspectRatioOptions[key as AspectRatioKey].label}
-                    </SelectItem>
-                  )) as React.ReactNode
-                }
-              </SelectContent>
-            </Select>
-          )}
-        />
-      )}
 
-      {(type === 'remove' || type === 'recolor') && (
-        <div className="prompt-field">
+        {type === 'fill' && (
           <CustomField
             control={form.control}
-            name="prompt"
-            formLabel={
-              type === 'remove' ? 'Object to remove' : 'Object to recolor'
-            }
+            name="aspectRatio"
+            formLabel="Aspect Ratio"
             className="w-full"
             render={({ field }) => (
-              <Input
-                value={field.value}
-                className="input-field"
-                onChange={(e) =>
-                  onInputChangeHandler(
-                    'prompt',
-                    e.target.value,
-                    type,
-                    field.onChange
-                  )
+              <Select
+                onValueChange={(value) =>
+                  onSelectFieldHandler(value, field.onChange)
                 }
-              />
+              >
+                <SelectTrigger className="select-field">
+                  <SelectValue placeholder="Select size" />
+                </SelectTrigger>
+                <SelectContent>
+                  {
+                    Object.keys(aspectRatioOptions).map((key) => (
+                      <SelectItem key={key} value={key}>
+                        {aspectRatioOptions[key as AspectRatioKey].label}
+                      </SelectItem>
+                    )) as React.ReactNode
+                  }
+                </SelectContent>
+              </Select>
             )}
           />
+        )}
 
-          {type === 'recolor' && (
+        {(type === 'remove' || type === 'recolor') && (
+          <div className="prompt-field">
             <CustomField
               control={form.control}
-              name="color"
-              formLabel="Replacement Color"
+              name="prompt"
+              formLabel={
+                type === 'remove' ? 'Object to remove' : 'Object to recolor'
+              }
               className="w-full"
               render={({ field }) => (
                 <Input
@@ -268,60 +245,83 @@ const TransformationForm = ({
                   className="input-field"
                   onChange={(e) =>
                     onInputChangeHandler(
-                      'color',
+                      'prompt',
                       e.target.value,
-                      'recolor',
+                      type,
                       field.onChange
                     )
                   }
                 />
               )}
             />
-          )}
-        </div>
-      )}
-      <div className="media-uploader-field">
-        <CustomField
-          control={form.control}
-          name="publicId"
-          className="flex size-full flex-col"
-          render={({ field }) => (
-            <MediaUploader
-              onValueChange={field.onChange}
-              setImage={setImage}
-              image={image}
-              type={type}
-              publicId={field.value}
-            />
-          )}
-        />
-        <TransformedImage
-          image={image}
-          type={type}
-          title={form.getValues().title}
-          isTransforming={isTransforming}
-          setIsTransforming={setIsTransforming}
-          transformationConfig={transformationConfig}
-        />
-      </div>
 
-      <div className="flex flex-col gap-4">
-        <Button
-          type="button"
-          className="submit-button capitalize"
-          disabled={isTransforming || newTransformation === null}
-          onClick={onTransformHandler}
-        >
-          {isTransforming ? 'Transforming...' : 'Apply Transformation'}
-        </Button>
-        <Button
-          type="submit"
-          className="submit-button capitalize"
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? 'Submitting...' : 'Save Image'}
-        </Button>
-      </div>
+            {type === 'recolor' && (
+              <CustomField
+                control={form.control}
+                name="color"
+                formLabel="Replacement Color"
+                className="w-full"
+                render={({ field }) => (
+                  <Input
+                    value={field.value}
+                    className="input-field"
+                    onChange={(e) =>
+                      onInputChangeHandler(
+                        'color',
+                        e.target.value,
+                        'recolor',
+                        field.onChange
+                      )
+                    }
+                  />
+                )}
+              />
+            )}
+          </div>
+        )}
+        <div className="media-uploader-field">
+          <CustomField
+            control={form.control}
+            name="publicId"
+            className="flex size-full flex-col"
+            render={({ field }) => (
+              <MediaUploader
+                onValueChange={field.onChange}
+                setImage={setImage}
+                image={image}
+                type={type}
+                publicId={field.value}
+              />
+            )}
+          />
+          <TransformedImage
+            image={image}
+            type={type}
+            title={form.getValues().title}
+            isTransforming={isTransforming}
+            setIsTransforming={setIsTransforming}
+            transformationConfig={transformationConfig}
+          />
+        </div>
+
+        <div className="flex flex-col gap-4">
+          <Button
+            type="button"
+            className="submit-button capitalize"
+            disabled={isTransforming || newTransformation === null}
+            onClick={onTransformHandler}
+          >
+            {isTransforming ? 'Transforming...' : 'Apply Transformation'}
+          </Button>
+          <Button
+            type="submit"
+            className="submit-button capitalize"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'Submitting...' : 'Save Image'}
+          </Button>
+        </div>
+      </form>
     </Form>
   );
 };
