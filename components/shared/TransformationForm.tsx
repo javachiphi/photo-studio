@@ -28,7 +28,7 @@ import TransformedImage from './TransformedImage';
 import { updateCredits } from '@/lib/actions/user.actions';
 import { getCldImageUrl } from 'next-cloudinary';
 import { addImage, updateImage } from '@/lib/actions/image.actions';
-import router from 'next/router';
+import { useRouter } from 'next/navigation';
 
 export const formSchema = z.object({
   title: z.string(),
@@ -63,6 +63,7 @@ const TransformationForm = ({
     defaultValues: initialValues,
   });
 
+  const router = useRouter();
   const [image, setImage] = useState(data);
   const [newTransformation, setNewTransformation] =
     useState<Transformations | null>(null);
@@ -108,6 +109,7 @@ const TransformationForm = ({
           if (newImage) {
             form.reset();
             setImage(data);
+
             router.push(`/transformations/${newImage._id}`);
           }
         } catch (error) {
